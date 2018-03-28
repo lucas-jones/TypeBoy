@@ -6,6 +6,7 @@ export enum Register
     PC,
     HL,
     DE,
+    BC,
     A,
     B,
     C,
@@ -59,9 +60,6 @@ export class Registers
     get E() { return this.registers.get(Register.E); }
     set E(value:number) { this.registers.set(Register.E, value); }
 
-    get F() { return this.registers.get(Register.F); }
-    set F(value:number) { this.registers.set(Register.F, value); }
-
     get H() { return this.registers.get(Register.H); }
     set H(value:number) { this.registers.set(Register.H, value); }
 
@@ -82,6 +80,29 @@ export class Registers
         this.E = value & 0xff;
     }
 
+    get BC() { return (this.B << 8) | this.C; }
+    set BC(value:number)
+    {
+        this.B = (value & 0xff00) >> 8;
+        this.C = value & 0xff;
+    }
+
+    get F()
+	{
+        return  (this.flags.zero ? 0x80 : 0x00) |
+                (this.flags.addsub ? 0x40 : 0) |
+                (this.flags.half ? 0x20 : 0) |
+                (this.flags.carry ? 0x10 : 0);
+	}
+
+	set F(value:number)
+	{
+		this.flags.carry = (value & (1 << 4)) != 0;
+		this.flags.half = (value & (1 << 5)) != 0;
+		this.flags.addsub = (value & (1 << 6)) != 0;
+		this.flags.zero = (value & (1 << 7)) != 0;
+	}
+
     constructor()
     {
         this.flags = new Flags();
@@ -99,14 +120,36 @@ export class Registers
         this.F = 0;
     }
 
+    broke()
+    {
+        return (
+            this.A == null ||
+            this.B == null ||
+            this.C == null ||
+            this.D == null ||
+            this.E == null ||
+            this.F == null ||
+            this.SP == null ||
+            this.PC == null
+        );
+    }
+
     set(register:Register, value:number)
     {
-        this.registers.set(register, value);
+        if(register == Register.HL) this.HL = value;
+        if(register == Register.DE) this.DE = value;
+        if(register == Register.BC) this.BC = value;
+        if(register == Register.F) this.F = value;
+        else this.registers.set(register, value);
     }
 
     get(register:Register)
     {
-        return this.registers.get(register);
+        if(register == Register.HL) return this.HL;
+        if(register == Register.DE) return this.DE;
+        if(register == Register.BC) return this.BC;
+        if(register == Register.F) return this.F;
+        else return this.registers.get(register);
     }
     
     toString()
@@ -117,6 +160,18 @@ export class Registers
             `A: ${Utils.toHexCompact(this.A)} B: ${Utils.toHexCompact(this.B)}`,
             `C: ${Utils.toHexCompact(this.C)} D: ${Utils.toHexCompact(this.D)}`,
             `E: ${Utils.toHexCompact(this.E)} F: ${Utils.toHexCompact(this.F)}`,
+        ].join(`\n`);
+    }
+
+    toStringBGB()
+    {
+        return [
+            `AF: ${Utils.toHexCompact(this.A)} ${Utils.toHexCompact(this.F)}`,
+            `BC: ${Utils.toHexCompact(this.B)} ${Utils.toHexCompact(this.C)}`,
+            `DE: ${Utils.toHexCompact(this.D)} ${Utils.toHexCompact(this.E)}`,
+            `HL: ${Utils.toHexCompact(this.HL)}`,
+            `SP: ${Utils.toHexCompact(this.SP)}`,
+            `PC: ${Utils.toHexCompact(this.PC)}`,
         ].join(`\n`);
     }
 }

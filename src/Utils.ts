@@ -7,8 +7,6 @@ export default class Utils
 
     public static toHexCompact(value:number)
     {
-        if(!value) return "????";
-
         return (value < 0x10 ? "0" : "") + value.toString(16).toUpperCase();
     }
 
