@@ -1,0 +1,14 @@
+{
+  "name": "typeboy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "./node_modules/.bin/tsc src/GB.ts --target es6 --module commonjs --outDir ./bin && node ./bin/GB.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^2.7.2"
+  }
+}
