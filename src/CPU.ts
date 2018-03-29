@@ -183,10 +183,10 @@ export default class CPU
 
 	LD(register:Register)
 	{
-		console.log("LD: " + Register[register]);
-		console.log(this.registers.get(register));
+		// console.log("LD: " + Register[register]);
+		// console.log(this.registers.get(register));
 		this.registers.set(register, this.memory.readByte(this.registers.PC));
-		console.log(Utils.toHex(this.registers.get(register)));
+		// console.log(Utils.toHex(this.registers.get(register)));
 		
 	}
 
@@ -239,7 +239,7 @@ export default class CPU
 		else
 		{
 			// this.stop = true;
-			console.log("break");
+			// console.log("break");
 			// console.log(this.memory.print(0x7000, 0xAFFF));
 		}
 	}

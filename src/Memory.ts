@@ -20,6 +20,11 @@ export default class Memory
         // console.log("WRITE " + Utils.toHex(address) + " = " + Utils.toHex(value));
     }
 
+    public writebytes(data:ArrayLike<number>, offset?:number)
+    {
+        this.data.set(data, offset);
+    }
+
     public readByte(address:number)
     {
         return this.data[address];
